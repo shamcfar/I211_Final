@@ -43,7 +43,7 @@ function suggest(query) {
 
     //proceed only if the search term isn't empty
     // open an asynchronous request to the server.
-    xmlHttp.open("GET", "search_movie.php?q=" + query, true);
+    xmlHttp.open("GET", base_url + "/" + media + "/suggest/" + query, true);
 
     //handle server's responses
     xmlHttp.onreadystatechange = function () {
@@ -89,7 +89,7 @@ function displayTitles(titles) {
 function handleKeyUp(e) {
     // get the key event for different browsers
     e = (!e) ? window.event : e;
-    
+
     /* if the keystroke is not up arrow or down arrow key, 
      * call the suggest function and pass the content of the search box
      */
@@ -97,32 +97,27 @@ function handleKeyUp(e) {
         suggest(e.target.value);
         return;
     }
-    
-    //the DOM object of the active title
-    var activeTitleObj = document.getElementById("s_" + activeTitle);
-    if(!activeTitleObj) {
-        return;
-    }
-    
+
     //if the up arrow key is pressed
-    if (e.keyCode === 38) {
+    if (e.keyCode === 38 && activeTitle > 0) {
         //add code here to handle up arrow key. e.g. select the previous item
         activeTitleObj.style.backgroundColor = "#FFF";
         activeTitle--;
-        activeTitle = (activeTitle < 0) ? (numTitles - 1) : activeTitle;
+        activeTitleObj = document.getElementById("s_" + activeTitle);
         activeTitleObj.style.backgroundColor = "#F5DEB3";
         searchBoxObj.value = activeTitleObj.innerHTML;
         return;
     }
-    
+
     //if the down arrow key is pressed
-    if (e.keyCode === 40) {
+    if (e.keyCode === 40 && activeTitle < numTitles - 1) {
         //add code here to handle down arrow key, e.g. select the next item 
-        if (activeTitle >= 0) {
+        
+        if(typeof(activeTitleObj) != "undefined") {
             activeTitleObj.style.backgroundColor = "#FFF";
         }
         activeTitle++;
-        activeTitle = (activeTitle >= numTitles) ? 0 : activeTitle;
+        activeTitleObj = document.getElementById("s_" + activeTitle);
         activeTitleObj.style.backgroundColor = "#F5DEB3";
         searchBoxObj.value = activeTitleObj.innerHTML;
     }
